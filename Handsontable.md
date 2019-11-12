@@ -98,3 +98,97 @@ export default class HandsonTableTest extends React.Component {
     licenseKey='non-commercial-and-evaluation'
 />
 ```
+## 三、基础的例子
+ * 使用外部复选框控制表行为的交互式实现。
+  在HotTable包装器中把配置项交给React的state控制，这样就能用外部事件来控制表格的交互。
+```javascript
+import React from 'react';
+import { HotTable } from '@handsontable/react';
+import Handsontable from 'handsontable';
+
+export default class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      settings: {
+        data: Handsontable.helper.createSpreadsheetData(15, 20),
+        width: 570,
+        height: 220,
+      }
+    }
+  }
+
+  handleChange = (setting, states) => {
+    return (event) => {
+      this.setState({
+        settings: {
+          [setting]: states[event.target.checked ? 1 : 0],
+        }
+      });
+    }
+  };
+
+  render() {
+    return (
+      <div>
+        <div className="controllers">
+          <label><input onChange={this.handleChange('fixedRowsTop', [0, 2])} type="checkbox" />固定两行</label><br/>
+          <label><input onChange={this.handleChange('fixedColumnsLeft', [0, 2])} type="checkbox" />固定两列</label><br/>
+          <label><input onChange={this.handleChange('rowHeaders', [false, true])} type="checkbox" />显示/隐藏行标题</label><br/>
+          <label><input onChange={this.handleChange('colHeaders', [false, true])} type="checkbox" />显示/隐藏列标题</label><br/>
+        </div>
+        <HotTable root="hot" settings={this.state.settings}/>
+      </div>
+    );
+  }
+}
+```
+
+* 添加右键菜单
+``` javascript
+  import React from 'react';
+  import { HotTable } from '@handsontable/react';
+  import Handsontable from 'handsontable';
+
+  class App extends React.Component {
+    constructor(props) {
+      super(props);
+      this.hotSettings = {
+        data: Handsontable.helper.createSpreadsheetData(5, 5),
+        colHeaders: true,
+        contextMenu: {
+          items: {
+            'row_above': {
+              name: '向上插入一行'
+            },
+            'row_below': {
+              name:'向下插入一行'
+            },
+            // 分割线
+            'separator': Handsontable.plugins.ContextMenu.SEPARATOR, 
+            // 自定义事件
+            'clear_custom': {
+              name: '清空所有单元格内容',
+              callback: function() {
+                this.clear();
+              }
+            }
+          }
+        }
+      };
+    }
+
+    render() {
+      return (
+        <div>
+          <HotTable
+            id="hot"
+            settings={this.hotSettings}
+          />
+        </div>
+      );
+    }
+  }
+```
+示例
+<img src="./img/example.png" width="100%">
