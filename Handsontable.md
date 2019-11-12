@@ -13,7 +13,7 @@ yarn add @handsontable/react
 import 'handsontable/dist/handsontable.full.css';
 ```
 
-##二、开始上手
+##二、开始上手 
 * 在react项目中使用
 ```javascript
 import React from 'react';
