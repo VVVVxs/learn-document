@@ -192,3 +192,75 @@ export default class MyComponent extends React.Component {
 ```
 示例
 <img src="./img/example.png" width="100%">
+
+* 自定义渲染单元格
+``` javascript
+  import React from 'react';
+  import ReactDOM from 'react-dom';
+  import { HotTable } from '@handsontable/react';
+  import Handsontable from 'handsontable';
+
+  class App extends React.Component {
+    constructor(props) {
+      super(props);
+      this.hotSettings = {
+        data:
+          [['A1', 'https://handsontable.com/docs/images/examples/professional-javascript-developers-nicholas-zakas.jpg'],
+            ['A2', 'https://handsontable.com/docs/images/examples/javascript-the-good-parts.jpg']],
+        columns: [
+          {},
+          {
+            renderer: function(instance, td, row, col, prop, value, cellProperties) {
+              const escaped = Handsontable.helper.stringify(value);
+              let img = null;
+
+              if (escaped.indexOf('http') === 0) {
+                img = document.createElement('IMG');
+                img.src = value;
+
+                Handsontable.dom.addEvent(img, 'mousedown', function(event) {
+                  event.preventDefault();
+                });
+
+                Handsontable.dom.empty(td);
+                td.appendChild(img);
+              }
+              else {
+                Handsontable.renderers.TextRenderer.apply(this, arguments);
+              }
+
+              return td;
+            }
+          }
+        ],
+        colHeaders: true,
+        rowHeights: 55
+      };
+    }
+
+    render() {
+      return (
+        <div>
+          <HotTable
+            id="hot"
+            settings={this.hotSettings}
+          />
+        </div>
+      );
+    }
+  }
+
+```
+示例
+<img src="./img/example2.png" width="50%">
+例子中data和columns的关系是一一对应，A1,A2属于第一行的数据，没有做自定义渲染，在columns中就用 {} 占位。columns的第二个对象是一个render函数
+```javascript
+function(instance, td, row, col, prop, value, cellProperties) {}
+// instance 是整个table的实例，可以使用handsontable的api
+// td 是当前单元格td的DOM
+// col 第几列
+// row 第几行
+// prop 数据的key值
+// value 数据值
+// cellProperties 前面几个参数的对象集合
+```
