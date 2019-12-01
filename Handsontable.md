@@ -301,4 +301,132 @@ function(instance, td, row, col, prop, value, cellProperties) {}
     }
   }
 ```
-在@handsontable/react提供包装器中获取ref，然后就可以在ref中获取到handsontable的实例，就可以使用handsontable提供api来更好的控制表格的行为
+在@handsontable/react提供包装器中获取ref，然后就可以在ref中获取到handsontable的实例，就可以使用handsontable提供api来控制表格的行为
+
+## 四、表格常规配置介绍
+  - data 表格的数据源，有两种格式
+    - 数组的数据格式
+    ```
+    const data = [['', 'Tesla', 'Nissan', 'Toyota', 'Honda', 'Mazda', 'Ford'],
+    ['2017', 10, 11, 12, 13, 15, 16],
+    ['2018', 10, 11, 12, 13, 15, 16],
+    ['2019', 10, 11, 12, 13, 15, 16],
+    ['2020', 10, 11, 12, 13, 15, 16],
+    ['2021', 10, 11, 12, 13, 15, 16]]
+    ``` 
+    示例
+    <img src="./img/example3.png" width="50%">
+    
+    - json对象格式的数据源
+    ```
+    const data = [
+    {id: 1, name: 'Ted Right', address: ''},
+    {id: 2, name: 'Frank Honest', address: ''},
+    {id: 3, name: 'Joan Well', address: ''},
+    {id: 4, name: 'Gail Polite', address: ''},
+    {id: 5, name: 'Michael Fair', address: ''}]
+    ```
+    示例
+    <img src="./img/example4.png" width="50%">
+
+１，冻结行列
+1.1：fixedRowsTop　冻结行（固定顶部开始算起指定行不随垂直滚动条滚动；
+
+1.2：fixedColumnsLeft　冻结列（固定右边开始算起指定行不随水平滚动条滚动）；
+
+2，显示表头
+2.1：colHeaders:true　显示列表头， 默认false， 可取 true/fals/数组 ，当值为数组时，列头为数组的值
+
+2.2：rowHeaders:true　显示行表头， 默认 false， 可取 true/fals/数组，当值为数组时，行头为数组的值
+
+3：允许通过拖曳行表头/列表头来改变行列的大小
+3.1： manualColumnResize:true 允许拖曳列表头，默认为false
+
+3.2： manualRowResize:true 允许拖曳行表头，默认为false
+
+4：显示表头下拉菜单
+4.1： contextMenu:true 显示表头的下拉菜单默认false 可取 true/false/自定义数组
+
+5：手动设置冻结列
+5.1：manualColumnFreeze:true  设置true后在单元格中右击出现一个菜单，此菜单会多出一个“Unfteeze this columu”的选项，再次点击就会取消冻结动作。 默认为false
+
+6:给当前行/列的一个样式名
+6.1：currentRowClassName:"cur" 给当前行设置样式名（鼠标点击某个单元格，则整行给样式）
+
+6.2：currentColClassName:"cur" 给当前行列设置样式名（鼠标点击某个单元格，则整行给样式）
+
+7：排序
+7.1：columnSorting:true 通过点击列表头进行排序（没有图标）
+
+当值为true时，表示启用排序插件
+当值为true时，排序插件的使用可通过点击列头文字实现。
+
+当值为false时表示禁用排序。当值为对象时，
+
+该对象包含两个属性：column：列数。
+
+sortOrder：true/false，升序或降序，
+
+true为升序排列。
+
+当用对象启动插件后可用如下方式禁用插件：
+
+hot.updateSettings({
+columnSorting:false
+});
+
+排序的使用也可已直接调用sort()方法实现。如下操作：
+if(hot.sortingEnabled){
+hot.sort(行数，true/false);
+ //true为升序，false为降序
+}
+
+ 
+
+8：自适应列大少
+8.1：autoColumnSize:true true/false //当值为true且列宽未设置时，自适应列大小
+
+ 
+
+9：启用observeChanges插件
+9.1：observeChanges：true/false //当值为true时，启用observeChanges插件
+ 
+
+10：设置列宽
+ 
+
+10.1：colWidths:[10,5,50],
+
+11：延伸列的宽度
+11.1：stretchH:"last"  可取 last/all/none last：延伸最后一列，all：延伸所有列，none默认不延伸。 
+
+ 
+
+ 
+
+12: 行分组或列分组
+12.1:groups:[{cols:[0,2]},{cols:[3,5]},{rows:[0,4]},{rows:[5,7]}]
+
+
+上面的例子介绍了4个分组，第0-2列为一组，第3-5列为第二组，第0-4行为一组，第5-7列为第二组。分组可在行头或列头看见，分组可被展开或隐藏。
+
+13:拖动行或列到某一行或列之后
+13.1:manualColumnMove：true/false 当值为true时，列可拖拽移动到指定列
+
+13.2:manualRowMove:true/false当值为true时，行可拖拽至指定行
+
+
+当属性的值为true时，行头或列头可以被拖拽移动，移动后该行或列将会被移动到指定位置，原先该行或列的后面部分自动上移或后退。移动的时候鼠标需选中行线或列线才行。
+
+注意：比如你移动的是列，那么请你把鼠标放到列表头中，当出现一个手型时候可以拖动，拖动的只是数据，列表头不会跟着移动。
+
+其他
+minCols：最小列数
+minRows：最小行数
+minSpareCols：添加空列
+maxCols：最大列数
+maxRows：最大行数
+minSpareRows：添加空行
+
+## 五、handsontable的核心api
+  核心api中文参考文档[https://blog.csdn.net/qianqianyixiao1/article/details/81507257](https://blog.csdn.net/qianqianyixiao1/article/details/81507257)
